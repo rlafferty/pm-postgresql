@@ -24,6 +24,7 @@ suites:
       inspec_tests:
         - test/smoke/default
     attributes:
+
   - name: client
     run_list:
       - recipe[pm-postgresql::client]
@@ -31,3 +32,14 @@ suites:
       inspec_tests:
         - test/smoke/client
     attributes:
+
+  - name: server
+    run_list:
+      - recipe[pm-postgresql::server]
+    verifier:
+      inspec_tests:
+        - test/smoke/server
+    attributes:
+      postgresql:
+        password:
+          postgres: supersecret
