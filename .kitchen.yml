@@ -14,7 +14,7 @@ verifier:
 
 platforms:
   - name: ubuntu-16.04
-  - name: centos-7.2
+  - name: ubuntu-14.04
 
 suites:
   - name: default
@@ -23,4 +23,11 @@ suites:
     verifier:
       inspec_tests:
         - test/smoke/default
+    attributes:
+  - name: client
+    run_list:
+      - recipe[pm-postgresql::client]
+    verifier:
+      inspec_tests:
+        - test/smoke/client
     attributes:
