@@ -22,7 +22,7 @@ suites:
       - recipe[pm-postgresql::default]
     verifier:
       inspec_tests:
-        - test/smoke/default
+        - test/smoke/recipes/default
     attributes:
 
   - name: client
@@ -30,7 +30,7 @@ suites:
       - recipe[pm-postgresql::client]
     verifier:
       inspec_tests:
-        - test/smoke/client
+        - test/smoke/recipes/client
     attributes:
 
   - name: server
@@ -38,7 +38,20 @@ suites:
       - recipe[pm-postgresql::server]
     verifier:
       inspec_tests:
-        - test/smoke/server
+        - test/smoke/recipes/server
+    attributes:
+      postgresql:
+        password:
+          postgres: supersecret
+
+  - name: create_database
+    run_list:
+      - recipe[pm-postgresql::server]
+      - recipe[postgresql::ruby]
+      - recipe[test::create_database]
+    verifier:
+      inspec_tests:
+        - test/smoke/resources/create_database_test.rb
     attributes:
       postgresql:
         password:
