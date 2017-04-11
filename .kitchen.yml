@@ -56,3 +56,16 @@ suites:
       postgresql:
         password:
           postgres: supersecret
+  - name: drop_database
+    run_list:
+      - recipe[pm-postgresql::server]
+      - recipe[postgresql::ruby]
+      - recipe[test::create_database]
+      - recipe[test::drop_database]
+    verifier:
+      inspec_tests:
+        - test/smoke/resources/drop_database_test.rb
+    attributes:
+      postgresql:
+        password:
+          postgres: supersecret

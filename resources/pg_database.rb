@@ -6,6 +6,8 @@ property :encoding, String, default: 'UTF8'
 property :tablespace, String
 property :owner, String, default: 'postgres'
 
+default_action :create
+
 action :create do
   load_pg_gem
 
@@ -19,6 +21,21 @@ action :create do
     Chef::Log.info("#{@new_resource}: Performing query [#{sql}]")
     db('postgres').query(sql)
     @new_resource.updated_by_last_action(true)
+  end
+end
+
+action :drop do
+  load_pg_gem
+
+  if already_exists?
+    Chef::Log.info("#{@new_resource}: Create database \
+    #{new_resource.database_name}")
+    sql = "DROP DATABASE \"#{new_resource.database_name}\""
+    Chef::Log.info("#{@new_resource}: Performing query [#{sql}]")
+    db('postgres').query(sql)
+    @new_resource.updated_by_last_action(true)
+  else
+    Chef::Log.info("Database #{new_resource.database_name} does not exist")
   end
 end
 
