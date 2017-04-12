@@ -4,6 +4,6 @@
 #
 # Copyright:: 2017, PhishMe, All Rights Reserved.
 
-%w(server).each do |recipe|
+%w(server ruby).each do |recipe|
   include_recipe "postgresql::#{recipe}"
 end
