@@ -12,14 +12,18 @@ action :create do
   load_pg_gem
 
   unless already_exists?
-    Chef::Log.info("#{@new_resource}: Create database \
-    #{new_resource.database_name}")
-    sql = "CREATE DATABASE \"#{new_resource.database_name}\""
-    sql += " TEMPLATE = #{new_resource.template}" if new_resource.template
-    sql += " TABLESPACE = #{new_resource.tablespace}" if new_resource.tablespace
-    sql += " OWNER = \"#{new_resource.owner}\""
-    Chef::Log.info("#{@new_resource}: Performing query [#{sql}]")
-    db('postgres').query(sql)
+    ruby_block 'create database' do
+      block do
+        Chef::Log.info("#{@new_resource}: Create database \
+        #{new_resource.database_name}")
+        sql = "CREATE DATABASE \"#{new_resource.database_name}\""
+        sql += " TEMPLATE = #{new_resource.template}" if new_resource.template
+        sql += " TABLESPACE = #{new_resource.tablespace}" if new_resource.tablespace
+        sql += " OWNER = \"#{new_resource.owner}\""
+        Chef::Log.info("#{@new_resource}: Performing query [#{sql}]")
+        db('postgres').query(sql)
+      end
+    end
     @new_resource.updated_by_last_action(true)
   end
 end
@@ -28,14 +32,16 @@ action :drop do
   load_pg_gem
 
   if already_exists?
-    Chef::Log.info("#{@new_resource}: Create database \
-    #{new_resource.database_name}")
-    sql = "DROP DATABASE \"#{new_resource.database_name}\""
-    Chef::Log.info("#{@new_resource}: Performing query [#{sql}]")
-    db('postgres').query(sql)
+    ruby_block 'drop database' do
+      block do
+        Chef::Log.info("#{@new_resource}: Create database \
+        #{new_resource.database_name}")
+        sql = "DROP DATABASE \"#{new_resource.database_name}\""
+        Chef::Log.info("#{@new_resource}: Performing query [#{sql}]")
+        db('postgres').query(sql)
+      end
+    end
     @new_resource.updated_by_last_action(true)
-  else
-    Chef::Log.info("Database #{new_resource.database_name} does not exist")
   end
 end
 
